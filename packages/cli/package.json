@@ -1,0 +1,19 @@
+{
+  "name": "@anthropic/state-sdk-cli",
+  "version": "0.1.0",
+  "description": "CLI tool for @anthropic/state-sdk - project initialization and Claude Code integration",
+  "type": "module",
+  "bin": {
+    "state-sdk": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}
