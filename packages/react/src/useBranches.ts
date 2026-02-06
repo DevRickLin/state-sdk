@@ -1,5 +1,5 @@
 import { useSyncExternalStore, useCallback } from 'react';
-import type { EnhancedStoreApi, BranchData, BranchDiffResult } from '@anthropic/state-sdk';
+import type { EnhancedStoreApi, BranchData, BranchDiffResult } from '@vibe-stack/state-sdk';
 
 interface BranchesState {
   branches: BranchData[];

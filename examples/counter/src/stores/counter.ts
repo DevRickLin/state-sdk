@@ -1,4 +1,4 @@
-import { create } from '@anthropic/state-sdk';
+import { create } from '@vibe-stack/state-sdk';
 
 interface CounterState {
   count: number;

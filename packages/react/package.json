@@ -1,7 +1,7 @@
 {
-  "name": "@anthropic/state-sdk-react",
+  "name": "@vibe-stack/state-sdk-react",
   "version": "0.1.0",
-  "description": "React bindings and DevPanel for @anthropic/state-sdk",
+  "description": "React bindings and DevPanel for @vibe-stack/state-sdk",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,7 +19,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@anthropic/state-sdk": "workspace:*"
+    "@vibe-stack/state-sdk": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.3.0",

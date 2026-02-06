@@ -17,10 +17,10 @@ importers:
 
   examples/counter:
     dependencies:
-      '@anthropic/state-sdk':
+      '@vibe-stack/state-sdk':
         specifier: workspace:*
         version: link:../../packages/core
-      '@anthropic/state-sdk-react':
+      '@vibe-stack/state-sdk-react':
         specifier: workspace:*
         version: link:../../packages/react
       react:
@@ -82,7 +82,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@anthropic/state-sdk':
+      '@vibe-stack/state-sdk':
         specifier: workspace:*
         version: link:../core
       react:

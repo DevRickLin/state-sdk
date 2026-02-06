@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@anthropic/state-sdk": "workspace:*",
-    "@anthropic/state-sdk-react": "workspace:*",
+    "@vibe-stack/state-sdk": "workspace:*",
+    "@vibe-stack/state-sdk-react": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DevPanel } from '@anthropic/state-sdk-react';
+import { DevPanel } from '@vibe-stack/state-sdk-react';
 import { useCounterStore } from './stores/counter';
 import { useTodoStore } from './stores/todo';
 

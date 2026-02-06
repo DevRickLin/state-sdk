@@ -1,5 +1,5 @@
 {
-  "name": "@anthropic/state-sdk",
+  "name": "@vibe-stack/state-sdk",
   "version": "0.1.0",
   "description": "State management SDK with Time Travel, Branching, and DevTools for vibe coding",
   "type": "module",

@@ -1,7 +1,7 @@
 {
-  "name": "@anthropic/state-sdk-cli",
+  "name": "@vibe-stack/state-sdk-cli",
   "version": "0.1.0",
-  "description": "CLI tool for @anthropic/state-sdk - project initialization and Claude Code integration",
+  "description": "CLI tool for @vibe-stack/state-sdk - project initialization and Claude Code integration",
   "type": "module",
   "bin": {
     "state-sdk": "./dist/index.js"

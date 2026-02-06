@@ -1,17 +1,17 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const CLAUDE_RULES_CONTENT = `# State Management Rules for @anthropic/state-sdk
+const CLAUDE_RULES_CONTENT = `# State Management Rules for @vibe-stack/state-sdk
 
 ## Package
-This project uses \`@anthropic/state-sdk\` for state management.
+This project uses \`@vibe-stack/state-sdk\` for state management.
 It is a Zustand-based SDK with built-in Time Travel, State Branching, and DevTools.
 
 ## Store Creation Pattern
-Always use \`create\` from \`@anthropic/state-sdk\` (NOT from \`zustand\` directly):
+Always use \`create\` from \`@vibe-stack/state-sdk\` (NOT from \`zustand\` directly):
 
 \`\`\`typescript
-import { create } from '@anthropic/state-sdk';
+import { create } from '@vibe-stack/state-sdk';
 
 const useXxxStore = create((set, get) => ({
   // state
@@ -32,7 +32,7 @@ export { useXxxStore };
 \`\`\`
 
 ## Rules
-1. NEVER import from 'zustand' directly — always use '@anthropic/state-sdk'
+1. NEVER import from 'zustand' directly — always use '@vibe-stack/state-sdk'
 2. Use Immer mutation syntax inside set() callbacks (e.g., \`state.items.push(item)\`)
 3. Keep stores in \`src/stores/\` directory
 4. One store per domain concern (e.g., useAuthStore, useCartStore, useTodoStore)
@@ -41,7 +41,7 @@ export { useXxxStore };
 7. Always include \`<DevPanel />\` in the root App component:
 
 \`\`\`tsx
-import { DevPanel } from '@anthropic/state-sdk-react';
+import { DevPanel } from '@vibe-stack/state-sdk-react';
 
 function App() {
   return (
@@ -56,8 +56,8 @@ function App() {
 ## Available Features (no extra setup needed)
 - **Time Travel**: \`useStore.temporal.undo()\`, \`useStore.temporal.redo()\`, \`useStore.temporal.goto(n)\`
 - **State Branching**: \`useStore.branch.fork('name')\`, \`useStore.branch.switch('id')\`, \`useStore.branch.diff('a', 'b')\`
-- **Snapshots**: \`import { snapshot } from '@anthropic/state-sdk'\` then \`snapshot.exportAll()\`, \`snapshot.importAll(data)\`
-- **Mock Injection**: \`import { mock } from '@anthropic/state-sdk'\` then \`mock.inject(useStore, { key: value })\`
+- **Snapshots**: \`import { snapshot } from '@vibe-stack/state-sdk'\` then \`snapshot.exportAll()\`, \`snapshot.importAll(data)\`
+- **Mock Injection**: \`import { mock } from '@vibe-stack/state-sdk'\` then \`mock.inject(useStore, { key: value })\`
 
 ## DevPanel
 The DevPanel is a floating panel that appears in development mode. It provides:
@@ -71,19 +71,19 @@ const ADD_STORE_COMMAND = `---
 description: Create a new state store
 ---
 
-Create a new Zustand store using @anthropic/state-sdk in src/stores/.
+Create a new Zustand store using @vibe-stack/state-sdk in src/stores/.
 
 Store domain: $ARGUMENTS
 
 Follow the patterns in .claude/rules/state-management.md:
-- Import \`create\` from '@anthropic/state-sdk' (not from zustand)
+- Import \`create\` from '@vibe-stack/state-sdk' (not from zustand)
 - Use Immer mutation syntax inside set() callbacks
 - Provide a \`name\` option matching the domain
 - Export with useXxxStore naming convention
 - Add TypeScript types for the store state
 `;
 
-const EXAMPLE_STORE = `import { create } from '@anthropic/state-sdk';
+const EXAMPLE_STORE = `import { create } from '@vibe-stack/state-sdk';
 
 interface CounterState {
   count: number;
@@ -119,7 +119,7 @@ function main() {
 
 function init() {
   const cwd = process.cwd();
-  console.log('Initializing @anthropic/state-sdk...\n');
+  console.log('Initializing @vibe-stack/state-sdk...\n');
 
   // 1. Create .claude/rules/ directory
   const rulesDir = path.join(cwd, '.claude', 'rules');
@@ -151,7 +151,7 @@ function init() {
 
   console.log('\nDone! Next steps:');
   console.log('  1. Install dependencies:');
-  console.log('     npm install @anthropic/state-sdk @anthropic/state-sdk-react');
+  console.log('     npm install @vibe-stack/state-sdk @vibe-stack/state-sdk-react');
   console.log('  2. Add <DevPanel /> to your root App component');
   console.log('  3. Use Claude Code to vibe — it will follow the rules automatically');
   console.log('');
@@ -159,11 +159,11 @@ function init() {
 
 function printHelp() {
   console.log(`
-@anthropic/state-sdk CLI
+@vibe-stack/state-sdk CLI
 
 Usage:
-  npx @anthropic/state-sdk-cli init    Initialize project with Claude Code rules and example store
-  npx @anthropic/state-sdk-cli help    Show this help message
+  npx @vibe-stack/state-sdk-cli init    Initialize project with Claude Code rules and example store
+  npx @vibe-stack/state-sdk-cli help    Show this help message
 
 Commands:
   init    Sets up .claude/rules/, .claude/commands/, and src/stores/ in your project

@@ -1,5 +1,5 @@
 import { useSyncExternalStore, useCallback } from 'react';
-import type { EnhancedStoreApi, TravelPatches } from '@anthropic/state-sdk';
+import type { EnhancedStoreApi, TravelPatches } from '@vibe-stack/state-sdk';
 
 interface UseTimelineResult {
   /** Current position in history */

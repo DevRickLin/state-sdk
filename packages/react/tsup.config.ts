@@ -7,5 +7,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   treeshake: true,
-  external: ['react', 'react-dom', 'zustand', 'immer', '@anthropic/state-sdk'],
+  external: ['react', 'react-dom', 'zustand', 'immer', '@vibe-stack/state-sdk'],
 });

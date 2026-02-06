@@ -12,7 +12,7 @@ export {
   bridge,
   snapshot,
   mock,
-} from '@anthropic/state-sdk';
+} from '@vibe-stack/state-sdk';
 
 export type {
   StoreConfig,
@@ -27,4 +27,4 @@ export type {
   EnhancedStoreApi,
   StoreRegistryEntry,
   SnapshotData,
-} from '@anthropic/state-sdk';
+} from '@vibe-stack/state-sdk';

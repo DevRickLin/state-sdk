@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { registry } from '@anthropic/state-sdk';
-import type { StoreRegistryEntry } from '@anthropic/state-sdk';
+import { registry } from '@vibe-stack/state-sdk';
+import type { StoreRegistryEntry } from '@vibe-stack/state-sdk';
 
 // ============================================
 // Types
