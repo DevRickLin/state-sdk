@@ -1,0 +1,87 @@
+{
+  "title": "State SDK Showcase",
+  "description": "Same app, different states — injected via postMessage at runtime",
+  "appUrl": "/counter/",
+  "scenes": [
+    {
+      "id": "initial",
+      "title": "Default State",
+      "description": "Fresh app — no interactions yet.",
+      "stores": {}
+    },
+    {
+      "id": "counting-up",
+      "title": "Counter at 42",
+      "description": "Counter incremented to 42 with Fibonacci history.",
+      "stores": {
+        "counter": {
+          "count": 42,
+          "history": [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+        }
+      }
+    },
+    {
+      "id": "negative",
+      "title": "Negative Counter",
+      "description": "Counter decremented into negative territory.",
+      "stores": {
+        "counter": {
+          "count": -7,
+          "history": [0, -1, -2, -3, -4, -5, -6]
+        }
+      }
+    },
+    {
+      "id": "active-project",
+      "title": "Active Project",
+      "description": "A project tracker with tasks in various states.",
+      "stores": {
+        "counter": { "count": 3, "history": [0, 1, 2] },
+        "todo": {
+          "todos": [
+            { "id": "t1", "text": "Design the SDK API", "done": true },
+            { "id": "t2", "text": "Implement time travel", "done": true },
+            { "id": "t3", "text": "Add branching support", "done": true },
+            { "id": "t4", "text": "Build DevPanel UI", "done": false },
+            { "id": "t5", "text": "Write documentation", "done": false }
+          ],
+          "filter": "all"
+        }
+      }
+    },
+    {
+      "id": "filtered-view",
+      "title": "Filtered: Active Only",
+      "description": "Todo list filtered to show only incomplete items.",
+      "stores": {
+        "counter": { "count": 15, "history": [] },
+        "todo": {
+          "todos": [
+            { "id": "a1", "text": "Set up CI/CD pipeline", "done": true },
+            { "id": "a2", "text": "Add snapshot export", "done": true },
+            { "id": "a3", "text": "Build showcase page", "done": false },
+            { "id": "a4", "text": "Deploy to production", "done": false }
+          ],
+          "filter": "active"
+        }
+      }
+    },
+    {
+      "id": "all-done",
+      "title": "All Complete",
+      "description": "Everything done — counter at max, all todos checked off.",
+      "stores": {
+        "counter": { "count": 100, "history": [25, 50, 75, 99] },
+        "todo": {
+          "todos": [
+            { "id": "d1", "text": "Research state management", "done": true },
+            { "id": "d2", "text": "Build prototype", "done": true },
+            { "id": "d3", "text": "Write tests", "done": true },
+            { "id": "d4", "text": "Ship v1.0", "done": true }
+          ],
+          "filter": "done"
+        }
+      }
+    }
+  ]
+}

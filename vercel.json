@@ -1,0 +1,6 @@
+{
+  "buildCommand": "pnpm run build:deploy",
+  "outputDirectory": ".vercel-output",
+  "installCommand": "npm i -g pnpm@9 && pnpm install",
+  "framework": null
+}

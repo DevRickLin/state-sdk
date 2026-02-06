@@ -7,7 +7,8 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "build:deploy": "turbo run build && mkdir -p .vercel-output && cp -r examples/showcase/dist/* .vercel-output/ && mkdir -p .vercel-output/counter && cp -r examples/counter/dist/* .vercel-output/counter/"
   },
   "devDependencies": {
     "turbo": "^2.3.0",

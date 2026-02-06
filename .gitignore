@@ -3,3 +3,5 @@ dist/
 .turbo/
 *.tsbuildinfo
 _research/
+.vercel
+.vercel-output
