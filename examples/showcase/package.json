@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vibe-stack/state-sdk-preview-runtime": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

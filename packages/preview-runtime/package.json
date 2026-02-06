@@ -1,0 +1,28 @@
+{
+  "name": "@vibe-stack/state-sdk-preview-runtime",
+  "version": "0.1.0",
+  "description": "Preview runtime for state-sdk — iframe ↔ host communication layer",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@vibe-stack/state-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}

@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { createPreviewHost } from '@vibe-stack/state-sdk-preview-runtime';
+import type { ConnectionStatus } from '@vibe-stack/state-sdk-preview-runtime';
 import config from './scenes.json';
 
 interface Scene {
@@ -7,6 +9,9 @@ interface Scene {
   description: string;
   stores: Record<string, Record<string, unknown>>;
 }
+
+// Single shared host instance — manages all iframe connections.
+const host = createPreviewHost();
 
 export function App() {
   return (
@@ -69,29 +74,31 @@ export function App() {
 
 function SceneCard({ scene, appUrl }: { scene: Scene; appUrl: string }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [status, setStatus] = useState<'loading' | 'ready' | 'injected'>('loading');
+  const [status, setStatus] = useState<ConnectionStatus>('connecting');
   const hasStores = Object.keys(scene.stores).length > 0;
 
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.source !== iframeRef.current?.contentWindow) return;
+    const iframe = iframeRef.current;
+    if (!iframe) return;
 
-      if (event.data?.type === 'state-sdk:ready') {
-        if (hasStores) {
-          iframeRef.current?.contentWindow?.postMessage(
-            { type: 'state-sdk:inject', stores: scene.stores },
-            '*'
-          );
-          setStatus('injected');
-        } else {
-          setStatus('ready');
-        }
+    const connection = host.connect(iframe, scene.id);
+
+    const unsubStatus = connection.onStatusChange((newStatus) => {
+      setStatus(newStatus);
+
+      // Auto-inject once the iframe is ready
+      if (newStatus === 'ready' && hasStores) {
+        connection.inject(scene.stores).catch(() => {
+          // injection failed — status stays 'ready'
+        });
       }
-    };
+    });
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [scene.stores, hasStores]);
+    return () => {
+      unsubStatus();
+      host.disconnect(scene.id);
+    };
+  }, [scene.id, scene.stores, hasStores]);
 
   const storeNames = Object.keys(scene.stores);
   const badgeColor = status === 'injected' ? '#22c55e' : status === 'ready' ? '#3b82f6' : '#71717a';
@@ -138,7 +145,7 @@ function SceneCard({ scene, appUrl }: { scene: Scene; appUrl: string }) {
 
       {/* Iframe */}
       <div style={{ position: 'relative', height: 420, background: '#09090b' }}>
-        {status === 'loading' && (
+        {status === 'connecting' && (
           <div style={{
             position: 'absolute', inset: 0, zIndex: 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -154,7 +161,7 @@ function SceneCard({ scene, appUrl }: { scene: Scene; appUrl: string }) {
             width: '100%',
             height: '100%',
             border: 'none',
-            opacity: status === 'loading' ? 0 : 1,
+            opacity: status === 'connecting' ? 0 : 1,
             transition: 'opacity 0.3s ease',
           }}
           title={scene.title}
