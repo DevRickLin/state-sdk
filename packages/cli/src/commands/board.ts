@@ -107,7 +107,7 @@ export function board(args: string[]): void {
     console.log('');
     console.log('To use the board, either:');
     console.log('  1. Clone vibe-studio and run: cd packages/board && pnpm dev');
-    console.log(`  2. Pass --board-path <path-to-board-dist>`);
+    console.log('  2. Pass --board-path <path-to-board-dist>');
     console.log('');
     console.log(`Board will be available at: http://localhost:${port}`);
     console.log(`Your app URL (from config): ${config.appUrl}`);
@@ -174,14 +174,21 @@ function startServer(
   // ---- WebSocket server (shares HTTP port) ----
   const wss = new WebSocketServer({ server });
 
-  function broadcastScenes(): void {
-    const scenes = listScenes(cwd);
-    const payload = JSON.stringify({ type: 'scenes:changed', scenes });
+  function broadcast(payload: string): number {
+    let count = 0;
     for (const client of wss.clients) {
-      if (client.readyState === 1) { // WebSocket.OPEN
+      if (client.readyState === 1) {
         client.send(payload);
+        count++;
       }
     }
+    return count;
+  }
+
+  function broadcastScenes(): number {
+    const scenes = listScenes(cwd);
+    const payload = JSON.stringify({ type: 'scenes:changed', scenes });
+    return broadcast(payload);
   }
 
   server.on('request', async (req: http.IncomingMessage, res: http.ServerResponse) => {
@@ -211,6 +218,56 @@ function startServer(
       return;
     }
 
+    // ---- API: apply scene to running cards ----
+    const applyMatch = pathname.match(/^\/api\/scenes\/([^/]+)\/apply$/);
+    if (applyMatch && req.method === 'POST') {
+      const sceneId = decodeURIComponent(applyMatch[1]);
+      const scene = readScene(cwd, sceneId);
+
+      if (!scene) {
+        jsonResponse(res, 404, { error: 'Scene not found' });
+        return;
+      }
+
+      let mode: 'merge' | 'replace' = scene.injectMode ?? 'merge';
+      let openIfMissing = false;
+
+      try {
+        const body = await readBody(req);
+        if (body.trim()) {
+          const parsed = JSON.parse(body) as { mode?: string; openIfMissing?: unknown };
+          if (parsed.mode !== undefined) {
+            if (parsed.mode !== 'merge' && parsed.mode !== 'replace') {
+              jsonResponse(res, 400, { error: 'Invalid mode. Expected merge or replace.' });
+              return;
+            }
+            mode = parsed.mode;
+          }
+          openIfMissing = parsed.openIfMissing === true;
+        }
+      } catch {
+        jsonResponse(res, 400, { error: 'Invalid JSON body' });
+        return;
+      }
+
+      const payload = {
+        type: 'scene:apply' as const,
+        sceneId,
+        mode,
+        openIfMissing,
+      };
+
+      const broadcastClients = broadcast(JSON.stringify(payload));
+      jsonResponse(res, 200, {
+        ok: true,
+        sceneId,
+        mode,
+        openIfMissing,
+        broadcastClients,
+      });
+      return;
+    }
+
     // ---- API: single scene operations ----
     const scenesMatch = pathname.match(/^\/api\/scenes\/([^/]+)$/);
     if (scenesMatch) {
@@ -233,7 +290,7 @@ function startServer(
           writeScene(cwd, scene);
           broadcastScenes();
           jsonResponse(res, 200, scene);
-        } catch (err) {
+        } catch {
           jsonResponse(res, 400, { error: 'Invalid JSON body' });
         }
         return;
@@ -270,7 +327,7 @@ function startServer(
           writeScene(cwd, existing);
           broadcastScenes();
           jsonResponse(res, 200, existing);
-        } catch (err) {
+        } catch {
           jsonResponse(res, 400, { error: 'Invalid JSON body' });
         }
         return;
@@ -293,7 +350,7 @@ function startServer(
       try {
         await devServer.start();
         jsonResponse(res, 200, { ok: true, status: devServer.status });
-      } catch (err) {
+      } catch {
         jsonResponse(res, 500, { error: 'Failed to start dev server' });
       }
       return;
@@ -304,7 +361,7 @@ function startServer(
       try {
         await devServer.stop();
         jsonResponse(res, 200, { ok: true, status: devServer.status });
-      } catch (err) {
+      } catch {
         jsonResponse(res, 500, { error: 'Failed to stop dev server' });
       }
       return;
@@ -354,7 +411,9 @@ function startServer(
           deleteScene(cwd, msg.id);
           broadcastScenes();
         }
-      } catch {}
+      } catch {
+        // ignore malformed client message
+      }
     });
   });
 
@@ -365,11 +424,7 @@ function startServer(
       status,
       url: devServer.url,
     });
-    for (const client of wss.clients) {
-      if (client.readyState === 1) {
-        client.send(payload);
-      }
-    }
+    broadcast(payload);
   });
 
   // Watch scenes directory for external changes

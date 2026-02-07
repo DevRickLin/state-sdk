@@ -2,7 +2,7 @@ import { init } from './commands/init.js';
 import { scene } from './commands/scene.js';
 import { board } from './commands/board.js';
 
-function main() {
+async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const command = args[0];
   const rest = args.slice(1);
@@ -13,7 +13,7 @@ function main() {
       init(rest);
       break;
     case 'scene':
-      scene(rest);
+      await scene(rest);
       break;
     case 'board':
       board(rest);
@@ -43,9 +43,14 @@ Commands:
   scene export <name> --output <file>   Export a scene to a file
   scene import <file> [--name <name>]   Import a scene from a file
   scene delete <name>             Delete a scene
+  scene apply <name> [options]    Apply a scene to running board cards
   board [--port <port>] [--open]  Start the preview board
   help                            Show this help message
 `);
 }
 
-main();
+main().catch((err: unknown) => {
+  const message = err instanceof Error ? err.message : String(err);
+  console.error(`Error: ${message}`);
+  process.exit(1);
+});
