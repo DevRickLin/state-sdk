@@ -1,4 +1,4 @@
-import { registry, mock, snapshot, bridge } from '@vibe-stack/state-sdk';
+import { registry, mock, bridge } from '@vibe-stack/state-sdk';
 import type { PreviewClientOptions, HostMessage } from './types.js';
 import {
   createHelloMessage,
@@ -50,10 +50,21 @@ export function initPreviewClient(options?: PreviewClientOptions): () => void {
     return allowedOrigins.includes(origin);
   }
 
+  /** Strip functions from state (not serializable via postMessage structured clone) */
+  function serializableState(state: Record<string, unknown>): Record<string, unknown> {
+    const result: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(state)) {
+      if (typeof value !== 'function') {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+
   function getCurrentStoresState(): Record<string, Record<string, unknown>> {
     const result: Record<string, Record<string, unknown>> = {};
     for (const entry of registry.getAll()) {
-      result[entry.name] = entry.store.getState() as Record<string, unknown>;
+      result[entry.name] = serializableState(entry.store.getState() as Record<string, unknown>);
     }
     return result;
   }
@@ -143,8 +154,11 @@ export function initPreviewClient(options?: PreviewClientOptions): () => void {
       }
 
       case 'snapshot-request': {
-        const data = snapshot.exportAll();
-        postToHost(createSnapshotResponseMessage(hostMsg.id, data));
+        const stores: Record<string, Record<string, unknown>> = {};
+        for (const entry of registry.getAll()) {
+          stores[entry.name] = serializableState(entry.store.getState() as Record<string, unknown>);
+        }
+        postToHost(createSnapshotResponseMessage(hostMsg.id, { version: 1, timestamp: Date.now(), stores }));
         break;
       }
 
